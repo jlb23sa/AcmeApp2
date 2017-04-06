@@ -35,31 +35,31 @@ namespace Acme.Biz
         /// Retrieves from Vendor Array
         /// </summary>
         /// <returns></returns>
-        public Vendor[] RetrieveArray()
-        {
-            var vendors = new Vendor[2];
+        //public Vendor[] RetrieveArray()
+        //{
+        //    var vendors = new Vendor[2];
 
-            //if (vendors == null)
-            //    {
-            //var vendors = new List<Vendor>;
+        //    //if (vendors == null)
+        //    //    {
+        //    //var vendors = new List<Vendor>;
 
-            vendors[0] = new Vendor()
-            { VendorId = 5, CompanyName = "ABC Corp", Email = "abc@abc.com" };
-            vendors[1] = new Vendor()
-            { VendorId = 8, CompanyName = "XYZ Inc", Email = "xyz@xyz.com" };
+        //    vendors[0] = new Vendor()
+        //    { VendorId = 5, CompanyName = "ABC Corp", Email = "abc@abc.com" };
+        //    vendors[1] = new Vendor()
+        //    { VendorId = 8, CompanyName = "XYZ Inc", Email = "xyz@xyz.com" };
 
-            //for (int i = 0; i < vendors.Count; i++)
-            //{
-            //    Console.WriteLine(vendors[i]);
-            //}
-            return vendors;
-        }
+        //    //for (int i = 0; i < vendors.Count; i++)
+        //    //{
+        //    //    Console.WriteLine(vendors[i]);
+        //    //}
+        //    return vendors;
+        //}
 
         /// <summary>
         /// Retrieves from Vendor Generic List
         /// </summary>
         /// <returns></returns>
-        public List<Vendor> Retrieve()
+        public IEnumerable<Vendor> Retrieve()
         {
             if (vendors == null)
             {
@@ -82,37 +82,81 @@ namespace Acme.Biz
             //Console.WriteLine(vendors[1]);
             return vendors;
         }
-        
+
+        public IEnumerable<Vendor> Retrieveall()
+        {
+            var vendors = new List<Vendor>()
+            {
+                {new Vendor()
+                    { VendorId = 1, CompanyName = "ABC Corp", Email = "abc@abc.com" }},
+                {new Vendor()
+                    { VendorId = 2, CompanyName = "XYZ Inc", Email = "xyz@xyz.com" }},
+                { new Vendor()
+                    { VendorId = 12, CompanyName = "EFG Ltd", Email = "efg@efg.com" }},
+                {new Vendor()
+                    { VendorId = 17, CompanyName = "HIJ AG", Email = "hij@hij.com" }},
+                {new Vendor()
+                    { VendorId = 22, CompanyName = "Amalgamated Toys", Email = "a@abc.com" }},
+                {new Vendor()
+                    { VendorId = 28, CompanyName = "Toy Blocks Inc", Email = "blocks@abc.com" }},
+                { new Vendor()
+                    { VendorId = 31, CompanyName = "Home Products Inc", Email = "home@abc.com" }},
+                { new Vendor()
+                    { VendorId = 35, CompanyName = "Car Toys", Email = "car@abc.com" }},
+                { new Vendor()
+                    { VendorId = 42, CompanyName = "Toys for Fun", Email = "fun@abc.com" }}
+        };
+            return vendors;
+        }
+
+        /// <summary>
+        /// Retrieves from Vendor IEnumerable
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Vendor> RetrieveWithIterator()
+        {
+            //Get the Data from the Database
+            this.Retrieve();
+
+            foreach (var vendor in vendors)
+            {
+                Console.WriteLine($"Vendor ID: {vendor.VendorId}");
+                yield return vendor;
+            }
+           
+            //return vendors;
+        }
+
         /// <summary>
         /// Retrieves vendor from Dictionary
         /// </summary>
         /// <returns></returns>
-        public Dictionary<string, Vendor> RetrieveWithKeys()
-        {
-            
-                var vendors = new Dictionary<string, Vendor>()
-                {
-                    { "ABC Corp", new Vendor()
-                    { VendorId = 5, CompanyName = "ABC Corp", Email = "abc@abc.com" }},
-                    { "XYZ Inc", new Vendor()
-                    { VendorId = 8, CompanyName = "XYZ Inc", Email = "xyz@xyz.com" }}
-                };
+        //public Dictionary<string, Vendor> RetrieveWithKeys()
+        //{
 
-            //Vendor vendor;
-            //if (vendors.TryGetValue("XYZ Inc", out vendor))
-            //    {
-            //    Console.WriteLine(vendor);
-            //    };
+        //        var vendors = new Dictionary<string, Vendor>()
+        //        {
+        //            { "ABC Corp", new Vendor()
+        //            { VendorId = 5, CompanyName = "ABC Corp", Email = "abc@abc.com" }},
+        //            { "XYZ Inc", new Vendor()
+        //            { VendorId = 8, CompanyName = "XYZ Inc", Email = "xyz@xyz.com" }}
+        //        };
 
-            //Console.WriteLine(vendors);
-            foreach (var element in vendors)
-            {
-                var vendor = element.Value;
-                var key = element.Key;
-                Console.WriteLine($"Key: {key} Value: {vendor}");
-            }
-            return vendors;
-        }
+        //    //Vendor vendor;
+        //    //if (vendors.TryGetValue("XYZ Inc", out vendor))
+        //    //    {
+        //    //    Console.WriteLine(vendor);
+        //    //    };
+
+        //    //Console.WriteLine(vendors);
+        //    foreach (var element in vendors)
+        //    {
+        //        var vendor = element.Value;
+        //        var key = element.Key;
+        //        Console.WriteLine($"Key: {key} Value: {vendor}");
+        //    }
+        //    return vendors;
+        //}
 
         public T RetrieveValue<T>(string sql, T defaultValue)
         {

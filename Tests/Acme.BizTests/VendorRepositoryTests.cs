@@ -59,7 +59,7 @@ namespace Acme.Biz.Tests
         {
             //Arrange
             var repository = new VendorRepository();
-      
+
             var expected = new List<Vendor>();
             expected.Add(new Vendor()
             { VendorId = 1, CompanyName = "ABC Corp", Email = "abc@abc.com" });
@@ -71,28 +71,96 @@ namespace Acme.Biz.Tests
             var actual = repository.Retrieve();
 
             //Assert
-            CollectionAssert.AreEqual(expected, actual);
+            CollectionAssert.AreEqual(expected, actual.ToList());
         }
 
         [TestMethod()]
-        public void RetrieveWithKeysTest()
+        public void RetrieveWithIteratorTest()
         {
             //Arrange
             var repository = new VendorRepository();
 
-            var expected = new Dictionary<string, Vendor>()
+            var expected = new List<Vendor>();
+            expected.Add(new Vendor()
+            { VendorId = 1, CompanyName = "ABC Corp", Email = "abc@abc.com" });
+            expected.Add(new Vendor()
+            { VendorId = 2, CompanyName = "XYZ Inc", Email = "xyz@xyz.com" });
+
+
+            //Act
+            var vendorIterator = repository.RetrieveWithIterator();
+            foreach (var item in vendorIterator)
             {
-                { "ABC Corp", new Vendor()
-                    { VendorId = 5, CompanyName = "ABC Corp", Email = "abc@abc.com" }},
-                { "XYZ Inc", new Vendor()
-                    { VendorId = 8, CompanyName = "XYZ Inc", Email = "xyz@xyz.com" }}
+                Console.WriteLine(item);
+            }
+            var actual = vendorIterator.ToList();
+
+            //Assert
+            CollectionAssert.AreEqual(expected, actual.ToList());
+        }
+
+        [TestMethod()]
+        public void RetrieveAllTest()
+        {
+            //Arrange
+            var repository = new VendorRepository();
+
+            var expected = new List<Vendor>()
+            {
+                {new Vendor()
+                    { VendorId = 22, CompanyName = "Amalgamated Toys", Email = "a@abc.com" }},
+                { new Vendor()
+                    { VendorId = 35, CompanyName = "Car Toys", Email = "car@abc.com" }},
+               {new Vendor()
+                    { VendorId = 28, CompanyName = "Toy Blocks Inc", Email = "blocks@abc.com" }},
+                { new Vendor()
+                    { VendorId = 42, CompanyName = "Toys for Fun", Email = "fun@abc.com" }}
             };
 
             //Act
-            var actual = repository.RetrieveWithKeys();
+            var vendors = repository.Retrieveall();
+            
+            //Query Syntax
+            //var vendorQuery = from v in vendors
+            //                  where v.CompanyName.Contains("Toy")
+            //                  orderby v.CompanyName
+            //                  select v;
+
+            // Method Syntax
+            //var vendorQuery = vendors.Where(FilterCompanies)
+            //    .OrderBy(OrderCompaniesByName);
+
+            //Lambda Syntax
+            var vendorQuery = vendors.Where(v => v.CompanyName.Contains("Toy"))
+                .OrderBy(v => v.CompanyName);
 
             //Assert
-            CollectionAssert.AreEqual(expected, actual);
+            CollectionAssert.AreEqual(expected, vendorQuery.ToList());
         }
+
+        // For method Syntax
+        //private bool FilterCompanies(Vendor v) => v.CompanyName.Contains("Toy");
+        //private string OrderCompaniesByName(Vendor v) => v.CompanyName;
+
+        //[TestMethod()]
+        //public void RetrieveWithKeysTest()
+        //{
+        //    //Arrange
+        //    var repository = new VendorRepository();
+
+        //    var expected = new Dictionary<string, Vendor>()
+        //    {
+        //        { "ABC Corp", new Vendor()
+        //            { VendorId = 5, CompanyName = "ABC Corp", Email = "abc@abc.com" }},
+        //        { "XYZ Inc", new Vendor()
+        //            { VendorId = 8, CompanyName = "XYZ Inc", Email = "xyz@xyz.com" }}
+        //    };
+
+        //    //Act
+        //    var actual = repository.RetrieveWithKeys();
+
+        //    //Assert
+        //    CollectionAssert.AreEqual(expected, actual);
+        //}
     }
 }
